@@ -1,4 +1,4 @@
-name: test-install-script
+name: installsh
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
-    name: trivy (${{ matrix.platform }})
+    name: install.sh (${{ matrix.platform }})
     outputs:
       install_sh_return_code: ${{ steps.check.outputs.install_sh_return_code }}
     runs-on: ${{ matrix.platform }}
