@@ -302,6 +302,7 @@ http_copy() {
 github_release() {
   owner_repo=$1
   version=$2
+  echo "https://api.github.com/repos/${owner_repo}/releases/${version}" # Remove (only for debug)
   test -z "$version" && version="latest"
   giturl="https://github.com/${owner_repo}/releases/${version}"
   json=$(http_copy "$giturl" "Accept:application/json")
