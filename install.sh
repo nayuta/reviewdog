@@ -258,8 +258,10 @@ http_download_curl() {
   source_url=$2
   header=$3
   if [ -z "$header" ]; then
+    curl -v -w '%{http_code}' -sL -o "$local_file" "$source_url" # Remove (only for debug)
     code=$(curl -w '%{http_code}' -sL -o "$local_file" "$source_url")
   else
+    curl -v -w '%{http_code}' -sL -H "$header" -o "$local_file" "$source_url" # Remove (only for debug)
     code=$(curl -w '%{http_code}' -sL -H "$header" -o "$local_file" "$source_url")
   fi
   if [ "$code" != "200" ]; then
