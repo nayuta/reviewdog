@@ -258,8 +258,10 @@ http_download_curl() {
   source_url=$2
   header=$3
   if [ -z "$header" ]; then
+    curl -v -w '%{http_code}' -sL -o "$local_file" "$source_url" # Remove (only for debug)
     code=$(curl -w '%{http_code}' -sL -o "$local_file" "$source_url")
   else
+    curl -v -w '%{http_code}' -sL -H "$header" -o "$local_file" "$source_url" # Remove (only for debug)
     code=$(curl -w '%{http_code}' -sL -H "$header" -o "$local_file" "$source_url")
   fi
   if [ "$code" != "200" ]; then
@@ -300,6 +302,7 @@ http_copy() {
 github_release() {
   owner_repo=$1
   version=$2
+  echo "https://api.github.com/repos/${owner_repo}/releases/${version}" # Remove (only for debug)
   test -z "$version" && version="latest"
   giturl="https://github.com/${owner_repo}/releases/${version}"
   json=$(http_copy "$giturl" "Accept:application/json")

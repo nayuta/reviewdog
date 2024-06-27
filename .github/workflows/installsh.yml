@@ -1,0 +1,41 @@
+name: installsh
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test-operating-systems:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    name: install.sh (${{ matrix.platform }})
+    outputs:
+      install_sh_return_code: ${{ steps.check.outputs.install_sh_return_code }}
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run install.sh
+        if: success() || failure ()
+        run: |
+          ./install.sh -d
+          echo "install_sh_return_code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Check install.sh result
+        if: success() || failure ()
+        run: |
+          if [[ "${{ steps.check.outputs.install_sh_return_code }}" -eq 0 ]]; then
+            echo "install.sh correctly returned success: ${{ steps.check.outputs.install_sh_return_code }}"
+          else
+            echo "install.sh returned ${{ steps.check.outputs.install_sh_return_code }}, expected '0'. Failing..."
+            exit 1
+          fi
